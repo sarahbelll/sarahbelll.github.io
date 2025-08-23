@@ -1,0 +1,86 @@
+:root {
+    --bg: #f6f3ef;
+    --ink: #1c1c1c;
+    --muted: #8c8c8c;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font);
+    background-color: var(--bg);
+    color: var(--ink);
+    padding: 0 24px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.name {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+nav a {
+    margin-left: 24px;
+    text-decoration: none;
+    color: var(--ink);
+}
+
+main {
+    padding: 48px 0;
+}
+
+.first-name {
+  font-family: 'Allura', cursive;
+  font-size: 2.2rem;
+}
+
+.last-name {
+  font-family: 'Bodoni Moda', serif;
+  font-size: 2.2rem;
+  text-transform: uppercase;
+}
+
+.hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 1rem;
+    min-height: 80vh;
+}
+
+.ring-wrap {
+    position: relative;
+    width: min(80vw, 400px);
+    aspect-ratio: 1/1;
+}
+
+.centre-copy {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+    width: 80%;
+}
+
+.centre-copy p {
+    font-size: 1rem;
+    margin: 0.5rem 0 0;
+}
+
+#ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
