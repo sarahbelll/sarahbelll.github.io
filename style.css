@@ -103,3 +103,45 @@ main {
     transition: transform 0.6s ease-in-out;
     transform-origin: center;
 }
+
+.project-details {
+  padding: 64px 24px;
+  background: #fff;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.project-details .container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.details-image-wrapper {
+  max-width: 180px;
+  margin: 24px auto;
+  text-align: center;
+}
+
+.details-image-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.project-details .details-client {
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.project-details .btn {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 10px 20px;
+  background: var(--ink);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+}
