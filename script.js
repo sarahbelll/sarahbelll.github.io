@@ -1,39 +1,65 @@
 const projects = [
   {
-    title: "Project One",
-    image: "https://images.unsplash.com/photo-1581093588401-1d8e9f10d8ea?auto=format&fit=crop&w=800&q=80",
+    title: "Football Event Centres",
+    client: "Sky Sports Mobile App - UK, DE, IT",
+    image: "assets/placeholder.jpg",
     description: "Description for project one."
   },
   {
-    title: "Project Two",
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80",
+    title: "Sports Recap and Key Plays",
+    client: "Sky Sports TV App & Peacock",
+    image: "assets/placeholder.jpg",
     description: "Description for project two."
   },
   {
-    title: "Project Three",
-    image: "https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=800&q=80",
+    title: "Motion Gaming - Beyond TV Experiences",
+    client: "Sky Live for Sky Glass",
+    image: "assets/placeholder.jpg",
     description: "Description for project three."
   },
   {
-    title: "Project Four",
-    image: "https://images.unsplash.com/photo-1472289065668-ce650ac443d2?auto=format&fit=crop&w=800&q=80",
+    title: "Virtual Production",
+    client: "Sky Studios",
+    image: "assets/placeholder.jpg",
     description: "Description for project four."
   },
   {
-    title: "Project Five",
-    image: "https://images.unsplash.com/photo-1472289065668-ce650ac443d2?auto=format&fit=crop&w=800&q=80",
+    title: "Social Entrepreneurship",
+    client: "The University of Sheffield",
+    image: "assets/placeholder.jpg",
     description: "Description for project five."
   },
   {
-    title: "Project Six",
-    image: "https://images.unsplash.com/photo-1472289065668-ce650ac443d2?auto=format&fit=crop&w=800&q=80",
+    title: "Just For Fun",
+    image: "assets/placeholder.jpg",
     description: "Description for project six."
   }
 
 ];
 
-const outerRadius = 48;
-const innerRadius = 36;
+const centerCopy = document.querySelector('.centre-copy');
+
+function updateCenterCopy(project = null) {
+  if (!project) {
+    centerCopy.innerHTML = `
+      <h1>
+        <span class='first-name'>Sarah</span>
+        <span class='last-name'>BELL</span>
+      </h1>
+      <p>Software Developer</p>
+    `;
+  } else {
+    centerCopy.innerHTML = `
+    <h1>${project.title}</h1>
+    <p>${project.client}</p>
+    `
+  }
+}
+
+let currentRotation = 0;
+
+const outerRadius = 60;
+const innerRadius = 48;
 const gapDegrees = 2;
 
 function polarToXY(radius, degrees) {
@@ -70,12 +96,63 @@ const sliceDegrees = totalDegrees / sliceCount;
 projects.forEach((project, i) => {
   const startAngle = i * (sliceDegrees + gapDegrees);
   const endAngle = startAngle + sliceDegrees;
+  const clipPathId = `clip-${i}`;
 
-  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  path.setAttribute("d", createSlicePath(outerRadius, innerRadius, startAngle, endAngle));
-  path.setAttribute("role", "listitem");
-  path.setAttribute("tabindex", "0");
-  path.setAttribute("aria-label", project.title);
+  const normalPath = createSlicePath(outerRadius, innerRadius, startAngle, endAngle);
+  const expandedPath = createSlicePath(outerRadius + 6, innerRadius, startAngle, endAngle);
 
-  svg.appendChild(path);
+  const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+  clipPath.setAttribute("id", clipPathId);
+
+  const clipShape = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  clipShape.setAttribute("d", normalPath);
+  clipPath.appendChild(clipShape);
+
+  let defs = svg.querySelector("defs");
+  if (!defs) {
+    defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    svg.appendChild(defs);
+  }
+  defs.appendChild(clipPath);
+
+  const image = document.createElementNS("http://www.w3.org/2000/svg", "image");
+  image.setAttribute("href", project.image);
+  image.setAttribute("x", -outerRadius - 6);
+  image.setAttribute("y", -outerRadius - 6);
+  image.setAttribute("width", (outerRadius + 6) * 2);
+  image.setAttribute("height", (outerRadius + 6) * 2);
+  image.setAttribute("clip-path", `url(#${clipPathId})`);
+  image.setAttribute("preserveAspectRatio", "xMidYMid slice")
+
+  const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  group.classList.add("project-slice");
+  group.appendChild(image);
+  svg.appendChild(group);
+
+  group.addEventListener("mouseenter", () => {
+    clipShape.setAttribute("d", expandedPath);
+    updateCenterCopy(project);
+  })
+
+  group.addEventListener("mouseleave", () => {
+    clipShape.setAttribute("d", normalPath);
+    updateCenterCopy();
+  });
+
+  group.addEventListener("click", () => {
+    const sliceAngle = sliceDegrees + gapDegrees;
+    const sliceCenterAngle = (i * sliceAngle) + (sliceAngle / 2);
+
+    currentRotation = 90 + sliceCenterAngle;
+
+    let rotationDiff = targetRotation - currentRotation;
+
+    rotationDiff = ((rotationDiff + 180) % 360) - 180;
+
+    currentRotation += rotationDiff;
+
+    svg.style.transform = `rotate(${currentRotation}deg)`;
+
+    showModal(project);
+  })
 });
